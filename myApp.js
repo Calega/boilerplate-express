@@ -1,16 +1,18 @@
 
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser')
 var absolutePath = __dirname + '/views/index.html';
 var staticAssets = __dirname + '/public';
 
 // --> 7)  Mount the Logger middleware here
 app.use(function(req,res,next) {
-    console.log(req.method + ' ' + req.path + ' - ' + req.ip);
-    next();
+  console.log(req.method + ' ' + req.path + ' - ' + req.ip);
+  next();
 })
 
 // --> 11)  Mount the body-parser middleware  here
+app.use(bodyParser.urlencoded({ extended: false }));
 
 /** 1) Meet the node console. */
 console.log('hello world');
@@ -50,23 +52,25 @@ app.get('/now', function(req,res,next) {
 /** 9)  Get input from client - Route parameters */
 app.get('/:word/echo', function(req, res) {
    res.json({
-     "echo" : req.params.word
-   });
+   "echo" : req.params.word
+  });
 });
 
 /** 10) Get input from client - Query parameters */
 // /name?first=<firstname>&last=<lastname>
-app.route('/name').get(function(req,res,next) {
+app.route('/name').get(function(req,res) {
   res.json({
     "name": req.query.first + ' ' + req.query.last
   });
-  next();
-}).post(function(req,res){} );
+}).post(function(req,res){
+    res.json({
+    "name": req.query.first + ' ' + req.query.last
+  });
+});
 
   
 /** 11) Get ready for POST Requests - the `body-parser` */
 // place it before all the routes !
-
 
 /** 12) Get data form POST  */
 
