@@ -31,12 +31,7 @@ app.use('/',express.static(staticAssets));
 /** 5) serve JSON on a specific route */
 /** 6) Use the .env file to configure the app */
 app.get('/json', function(req,res) {
-  
-  var m = {};
-  
-  m.message = process.env.MESSAGE_STYLE === "uppercase" ? "HELLO JSON" : "Hello json";
-  
-	res.json(m);
+	res.json({"message" : process.env.MESSAGE_STYLE === "uppercase" ? "HELLO JSON" : "Hello json"});
 })
  
 /** 7) Root-level Middleware - A logger */
@@ -47,26 +42,26 @@ app.get('/now', function(req,res,next) {
   req.time = new Date().toString();
   next();
 }, function(req,res) {
-  
-  var t = {
+  res.json({
     "time" : req.time
-  };
-  
-  res.json(t);
+  });
 })
 
 /** 9)  Get input from client - Route parameters */
 app.get('/:word/echo', function(req, res) {
-   var e = {
+   res.json({
      "echo" : req.params.word
-   };
-  
-   res.json(e);
+   });
 });
-
 
 /** 10) Get input from client - Query parameters */
 // /name?first=<firstname>&last=<lastname>
+app.route('/name').get(function(req,res,next) {
+  res.json({
+    "name": req.query.first + ' ' + req.query.last
+  });
+  next();
+}).post(function(req,res){} );
 
   
 /** 11) Get ready for POST Requests - the `body-parser` */
